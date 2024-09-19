@@ -3,9 +3,11 @@ import { toast } from 'react-toastify'
 import { updateManyUser } from '../../../../global/api/updateManyUsers'
 import { deleteUsers } from '../../../../global/api/deleteUsers'
 import { useNavigate } from 'react-router-dom'
+import useAuthStore from '../../../../global/store/authStore'
 
 export const TableActions = ({ selecteds, setUpdate, setSelecteds }) => {
     const navigate = useNavigate()
+    const logout = useAuthStore((state) => state.logout);
 
     const blockAndUblockHandler = async (type) => {
         const conditionFromType = type === 'block'
@@ -18,6 +20,15 @@ export const TableActions = ({ selecteds, setUpdate, setSelecteds }) => {
         })
 
         await updateManyUser(sample)
+
+        const myOwnId = localStorage.getItem('id')
+
+        const sampleFromJustIds = selecteds.map(i => i._id)
+
+        if (sampleFromJustIds.includes(myOwnId) && conditionFromType) {
+            logout()
+            return navigate('/login')
+        }
 
         setSelecteds([])
         setUpdate(true)
@@ -33,7 +44,8 @@ export const TableActions = ({ selecteds, setUpdate, setSelecteds }) => {
 
         const myOwnId = localStorage.getItem('id')
 
-        if(sample.includes(myOwnId)) {
+        if (sample.includes(myOwnId)) {
+            logout()
             return navigate('/login')
         }
 

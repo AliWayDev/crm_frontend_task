@@ -3,9 +3,12 @@ import { updateOneUser } from '../../../../global/api/updateOneUser';
 import { toast } from 'react-toastify';
 import { deleteUsers } from '../../../../global/api/deleteUsers';
 import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../../../../global/store/authStore';
 
 export const ListItem = (props) => {
     const navigate = useNavigate()
+    const logout = useAuthStore((state) => state.logout);
+    const myOwnId = localStorage.getItem('id')
 
     const { name, email, lastActivity, status, selectUserHandler, id, isChecked, setUpdate } = props;
 
@@ -15,6 +18,11 @@ export const ListItem = (props) => {
         await updateOneUser(id, {
             status: 'Blocked'
         })
+
+        if (id === myOwnId) {
+            logout()
+            return navigate('/login')
+        }
 
         setUpdate(true)
         toast.success('Blocked!')
@@ -32,9 +40,8 @@ export const ListItem = (props) => {
     const deleteHandler = async (id) => {
         await deleteUsers([id])
 
-        const myOwnId = localStorage.getItem('id')
-
         if (id === myOwnId) {
+            logout()
             return navigate('/login')
         }
 
