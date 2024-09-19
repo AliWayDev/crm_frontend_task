@@ -80,7 +80,7 @@ export const Dashboard = () => {
 				setUpdateList(false)
 			})();
 		}
-	}, [updateList])
+	}, [updateList, isAuth])
 
 	useEffect(() => {
 		if (!isAuth) {
