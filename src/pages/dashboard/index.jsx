@@ -73,14 +73,6 @@ export const Dashboard = () => {
 
 	useEffect(() => {
 		(async () => {
-			await updateOneUser(localStorage.getItem('id'), {
-				lastActivity: getCurrentDate()
-			})
-		})()
-	}, [])
-
-	useEffect(() => {
-		(async () => {
 			const users = await getAllUsers()
 
 			setUsers(users)
@@ -92,7 +84,11 @@ export const Dashboard = () => {
 		if (!isAuth) {
 			navigate("/login");
 		} else {
-			navigate("/");
+			(async () => {
+				await updateOneUser(localStorage.getItem('id'), {
+					lastActivity: getCurrentDate()
+				})
+			})()
 		}
 	}, [isAuth, navigate]);
 
