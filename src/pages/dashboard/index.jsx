@@ -72,12 +72,14 @@ export const Dashboard = () => {
 	}
 
 	useEffect(() => {
-		(async () => {
-			const users = await getAllUsers()
+		if (isAuth) {
+			(async () => {
+				const users = await getAllUsers()
 
-			setUsers(users)
-			setUpdateList(false)
-		})();
+				setUsers(users)
+				setUpdateList(false)
+			})();
+		}
 	}, [updateList])
 
 	useEffect(() => {
